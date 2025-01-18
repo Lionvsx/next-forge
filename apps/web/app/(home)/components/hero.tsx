@@ -1,7 +1,7 @@
+import { env } from '@/env';
 import { blog } from '@repo/cms';
 import { Feed } from '@repo/cms/components/feed';
 import { Button } from '@repo/design-system/components/ui/button';
-import { env } from '@repo/env';
 import { MoveRight, PhoneCall } from 'lucide-react';
 import { draftMode } from 'next/headers';
 import Link from 'next/link';
@@ -26,7 +26,7 @@ export const Hero = async () => {
                     className="gap-4"
                     asChild
                   >
-                    <Link href={`/blog/${data.blog.posts.items.at(0)?._slug}`}>
+                    <Link href={`/blog/${data.blog.posts.item?._slug}`}>
                       Read our latest article <MoveRight className="h-4 w-4" />
                     </Link>
                   </Button>

@@ -1,11 +1,12 @@
 import { Sidebar } from '@/components/sidebar';
+import { env } from '@/env';
 import { ArrowLeftIcon } from '@radix-ui/react-icons';
 import { blog } from '@repo/cms';
 import { Body } from '@repo/cms/components/body';
+import { CodeBlock } from '@repo/cms/components/code-block';
 import { Feed } from '@repo/cms/components/feed';
 import { Image } from '@repo/cms/components/image';
 import { TableOfContents } from '@repo/cms/components/toc';
-import { env } from '@repo/env';
 import { JsonLd } from '@repo/seo/json-ld';
 import { createMetadata } from '@repo/seo/metadata';
 import type { Metadata } from 'next';
@@ -13,6 +14,11 @@ import { draftMode } from 'next/headers';
 import Link from 'next/link';
 import { notFound } from 'next/navigation';
 import Balancer from 'react-wrap-balancer';
+
+const protocol = env.VERCEL_PROJECT_PRODUCTION_URL?.startsWith('https')
+  ? 'https'
+  : 'http';
+const url = new URL(`${protocol}://${env.VERCEL_PROJECT_PRODUCTION_URL}`);
 
 type BlogPostProperties = {
   readonly params: Promise<{
@@ -53,7 +59,7 @@ const BlogPost = async ({ params }: BlogPostProperties) => {
       {async ([data]) => {
         'use server';
 
-        const [page] = data.blog.posts.items;
+        const page = data.blog.posts.item;
 
         if (!page) {
           notFound();
@@ -69,10 +75,7 @@ const BlogPost = async ({ params }: BlogPostProperties) => {
                 description: page.description,
                 mainEntityOfPage: {
                   '@type': 'WebPage',
-                  '@id': new URL(
-                    `/blog/${slug}`,
-                    env.NEXT_PUBLIC_VERCEL_PROJECT_PRODUCTION_URL
-                  ).toString(),
+                  '@id': new URL(`/blog/${page._slug}`, url).toString(),
                 },
                 headline: page._title,
                 image: page.image.url,
@@ -109,7 +112,19 @@ const BlogPost = async ({ params }: BlogPostProperties) => {
                       />
                     ) : undefined}
                     <div className="mx-auto max-w-prose">
-                      <Body content={page.body.json.content} />
+                      <Body
+                        content={page.body.json.content}
+                        components={{
+                          pre: ({ code, language }) => {
+                            return (
+                              <CodeBlock
+                                theme="vesper"
+                                snippets={[{ code, language }]}
+                              />
+                            );
+                          },
+                        }}
+                      />
                     </div>
                   </div>
                 </div>

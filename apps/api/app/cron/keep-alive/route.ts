@@ -1,10 +1,9 @@
 import { database } from '@repo/database';
 
-export const POST = async () => {
+export const GET = async () => {
   const newPage = await database.page.create({
     data: {
       name: 'cron-temp',
-      email: 'test@test.com',
     },
   });
 

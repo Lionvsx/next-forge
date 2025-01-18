@@ -2,6 +2,7 @@
 
 import { OrganizationSwitcher, UserButton } from '@repo/auth/client';
 import { ModeToggle } from '@repo/design-system/components/mode-toggle';
+import { Button } from '@repo/design-system/components/ui/button';
 import {
   Collapsible,
   CollapsibleContent,
@@ -33,6 +34,7 @@ import {
   useSidebar,
 } from '@repo/design-system/components/ui/sidebar';
 import { cn } from '@repo/design-system/lib/utils';
+import { NotificationsTrigger } from '@repo/notifications/components/trigger';
 import {
   AnchorIcon,
   BookOpenIcon,
@@ -51,6 +53,7 @@ import {
   Trash2Icon,
 } from 'lucide-react';
 import type { ReactNode } from 'react';
+import { Search } from './search';
 
 type GlobalSidebarProperties = {
   readonly children: ReactNode;
@@ -208,6 +211,7 @@ export const GlobalSidebar = ({ children }: GlobalSidebarProperties) => {
             </SidebarMenuItem>
           </SidebarMenu>
         </SidebarHeader>
+        <Search />
         <SidebarContent>
           <SidebarGroup>
             <SidebarGroupLabel>Platform</SidebarGroupLabel>
@@ -331,7 +335,19 @@ export const GlobalSidebar = ({ children }: GlobalSidebarProperties) => {
                   },
                 }}
               />
-              <ModeToggle />
+              <div className="flex shrink-0 items-center gap-px">
+                <ModeToggle />
+                <Button
+                  variant="ghost"
+                  size="icon"
+                  className="shrink-0"
+                  asChild
+                >
+                  <div className="h-4 w-4">
+                    <NotificationsTrigger />
+                  </div>
+                </Button>
+              </div>
             </SidebarMenuItem>
           </SidebarMenu>
         </SidebarFooter>
